@@ -23,7 +23,10 @@ const Index = () => {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching proposals:', error);
+        throw error;
+      }
       return data as Proposal[];
     }
   });
@@ -32,7 +35,7 @@ const Index = () => {
   const calculateStats = (proposals: Proposal[]): VotingStatsType => {
     const activeProposals = proposals.filter(p => p.status === 'active').length;
     const completedProposals = proposals.filter(p => p.status === 'completed').length;
-    const totalVotes = proposals.reduce((sum, p) => sum + p.votesFor + p.votesAgainst, 0);
+    const totalVotes = proposals.reduce((sum, p) => sum + p.votes_for + p.votes_against, 0);
     const participationRate = proposals.length > 0 
       ? (totalVotes / (proposals.length * 100)) * 100 
       : 0;
@@ -71,8 +74,8 @@ const Index = () => {
 
       const updates = {
         ...(vote === "for" 
-          ? { votes_for: proposal.votesFor + 1 }
-          : { votes_against: proposal.votesAgainst + 1 }
+          ? { votes_for: proposal.votes_for + 1 }
+          : { votes_against: proposal.votes_against + 1 }
         ),
         updated_at: new Date().toISOString()
       };
@@ -153,7 +156,12 @@ const Index = () => {
             {proposals.map((proposal) => (
               <ProposalCard
                 key={proposal.id}
-                proposal={proposal}
+                proposal={{
+                  ...proposal,
+                  votesFor: proposal.votes_for,
+                  votesAgainst: proposal.votes_against,
+                  deadline: new Date(proposal.deadline)
+                }}
                 onVote={handleVote}
               />
             ))}

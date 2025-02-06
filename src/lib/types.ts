@@ -3,12 +3,12 @@ export interface Proposal {
   id: string;
   title: string;
   description: string;
-  votesFor: number;
-  votesAgainst: number;
-  deadline: Date;
+  votes_for: number;  // Changed from votesFor to match DB schema
+  votes_against: number;  // Changed from votesAgainst to match DB schema
+  deadline: string;  // Changed from Date to string as that's how it comes from DB
   status: 'active' | 'completed';
-  created_at?: Date;
-  updated_at?: Date;
+  created_at?: string;  // Changed from Date to string
+  updated_at?: string;  // Changed from Date to string
 }
 
 export interface Transaction {

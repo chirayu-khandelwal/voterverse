@@ -5,14 +5,24 @@ import { Proposal } from "@/lib/types";
 import VoteButton from "./VoteButton";
 
 interface ProposalCardProps {
-  proposal: Proposal;
+  proposal: {
+    id: string;
+    title: string;
+    description: string;
+    votesFor: number;
+    votesAgainst: number;
+    deadline: Date;
+    status: 'active' | 'completed';
+    created_at?: string;
+    updated_at?: string;
+  };
   onVote: (proposalId: string, vote: "for" | "against") => void;
 }
 
 const ProposalCard = ({ proposal, onVote }: ProposalCardProps) => {
   const totalVotes = proposal.votesFor + proposal.votesAgainst;
   const forPercentage = totalVotes > 0 ? (proposal.votesFor / totalVotes) * 100 : 0;
-  const timeLeft = new Date(proposal.deadline).getTime() - new Date().getTime();
+  const timeLeft = proposal.deadline.getTime() - new Date().getTime();
   const daysLeft = Math.max(0, Math.ceil(timeLeft / (1000 * 60 * 60 * 24)));
 
   return (

@@ -7,6 +7,8 @@ export interface Proposal {
   votesAgainst: number;
   deadline: Date;
   status: 'active' | 'completed';
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface Transaction {

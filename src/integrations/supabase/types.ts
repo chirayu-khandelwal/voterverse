@@ -15,6 +15,7 @@ export type Database = {
           deadline: string
           description: string
           id: string
+          status: string
           title: string
           updated_at: string | null
           votes_against: number
@@ -25,6 +26,7 @@ export type Database = {
           deadline: string
           description: string
           id?: string
+          status?: string
           title: string
           updated_at?: string | null
           votes_against?: number
@@ -35,6 +37,7 @@ export type Database = {
           deadline?: string
           description?: string
           id?: string
+          status?: string
           title?: string
           updated_at?: string | null
           votes_against?: number

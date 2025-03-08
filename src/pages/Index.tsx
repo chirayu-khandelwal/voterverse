@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,15 +17,18 @@ const Index = () => {
   const { data: proposals = [], isLoading } = useQuery({
     queryKey: ['proposals'],
     queryFn: async () => {
+      console.log('Fetching proposals...');
       const { data, error } = await supabase
         .from('proposals')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .schema('api'); // Specify the 'api' schema
 
       if (error) {
         console.error('Error fetching proposals:', error);
         throw error;
       }
+      console.log('Proposals fetched:', data);
       return data as Proposal[];
     }
   });
@@ -54,7 +56,7 @@ const Index = () => {
       .channel('proposals-changes')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'proposals' },
+        { event: '*', schema: 'api', table: 'proposals' }, // Update schema here as well
         (payload) => {
           console.log('Real-time update received:', payload);
           queryClient.invalidateQueries({ queryKey: ['proposals'] });
@@ -83,7 +85,8 @@ const Index = () => {
       const { error } = await supabase
         .from('proposals')
         .update(updates)
-        .eq('id', proposalId);
+        .eq('id', proposalId)
+        .schema('api'); // Specify the 'api' schema for updates too
 
       if (error) throw error;
 
